@@ -13,24 +13,28 @@ import android.widget.RelativeLayout;
  */
 
 class RecAdapter extends RecyclerView.Adapter<RecAdapter.VH> {
+    private int mRecyclerViewWidth;
     private Context mContext;
 
-    public RecAdapter(Context context) {
+    public RecAdapter(Context context, int recyclerViewWidth) {
         mContext = context;
+        mRecyclerViewWidth = recyclerViewWidth;
+
+
     }
 
     // 准备要显示的图片资源
     private int[] imageIdArray = {R.drawable.iv1, R.drawable.iv2,
             R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
-            R.drawable.iv3, R.drawable.iv4,R.drawable.iv1, R.drawable.iv2,
             R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
-            R.drawable.iv3, R.drawable.iv4,R.drawable.iv1, R.drawable.iv2,
             R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
-            R.drawable.iv3, R.drawable.iv4,R.drawable.iv1, R.drawable.iv2,
             R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
-            R.drawable.iv3, R.drawable.iv4,R.drawable.iv1, R.drawable.iv2,
             R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
-            R.drawable.iv3, R.drawable.iv4,R.drawable.iv1, R.drawable.iv2,
+            R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
+            R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
+            R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
+            R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
+            R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
             R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
             R.drawable.iv3, R.drawable.iv4};
 
@@ -43,31 +47,21 @@ class RecAdapter extends RecyclerView.Adapter<RecAdapter.VH> {
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
-        holder.iv.setImageResource(imageIdArray[0]);
-//        holder.iv.setImageResource(imageIdArray[position]);
-//        holder.itemRoot.setScaleX(0.75f);
-//        holder.itemRoot.setScaleY(0.75f);
-        if (position==0){
-
-
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.itemRoot.getLayoutParams();
-            p.leftMargin=545;
-            p.rightMargin=0;
+        holder.iv.setImageResource(imageIdArray[position]);
+        ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.itemRoot.getLayoutParams();
+        // 为了居中， 第一个条目leftMagrin、最后一个条目的rightMargin是（recyclerView宽度减去一个条目的宽度）/2
+        int margin = (mRecyclerViewWidth - p.width) / 2;
+        if (position == 0) {
+            p.leftMargin = margin;
+            p.rightMargin = 0;
             holder.itemRoot.setLayoutParams(p);
-        }else
-
-
-        if (position==imageIdArray.length-1){
-
-
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.itemRoot.getLayoutParams();
-            p.leftMargin=0;
-            p.rightMargin=545;
+        } else if (position == imageIdArray.length - 1) {
+            p.leftMargin = 0;
+            p.rightMargin = margin;
             holder.itemRoot.setLayoutParams(p);
-        }else {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.itemRoot.getLayoutParams();
-            p.leftMargin=0;
-            p.rightMargin=0;
+        } else {
+            p.leftMargin = 0;
+            p.rightMargin = 0;
             holder.itemRoot.setLayoutParams(p);
 
         }
@@ -81,12 +75,13 @@ class RecAdapter extends RecyclerView.Adapter<RecAdapter.VH> {
 
     class VH extends RecyclerView.ViewHolder {
 
-        private  RelativeLayout itemRoot;
+        private RelativeLayout itemRoot;
         private ImageView iv;
 
         public VH(View itemView) {
             super(itemView);
             itemRoot = itemView.findViewById(R.id.item_root);
+
             iv = itemView.findViewById(R.id.iv);
         }
     }

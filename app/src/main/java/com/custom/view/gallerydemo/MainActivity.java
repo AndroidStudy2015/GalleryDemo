@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,37 +40,21 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerview.setLayoutManager(manager);
 
-        mRecAdapter = new RecAdapter(this);
+
+        int mRecyclerviewWidth = 0;
+        ViewGroup.LayoutParams layoutParams = mRecyclerview.getLayoutParams();
+        if (layoutParams.width == -1) {
+            mRecyclerviewWidth = DisplayUtils.getScreenWidth(this);
+        } else {
+            mRecyclerviewWidth = layoutParams.width;
+        }
+        mRecAdapter = new RecAdapter(this, mRecyclerviewWidth);
         mRecyclerview.setAdapter(mRecAdapter);
         mLl1 = findViewById(R.id.ll1);
         final LinearSnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mRecyclerview);
         mRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
 
-
-                    View snapView = helper.findSnapView(manager);
-//                    snapView.setScaleX(1.0f);
-//                    snapView.setScaleY(1.0f);
-//                    snapView.setScaleX(0.75f);
-//                    snapView.setScaleY(0.75f);
-                }
-
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    int childCount = mRecyclerview.getChildCount();
-                    for (int i = 0; i < childCount; i++) {
-                        View childAt = mRecyclerview.getChildAt(i);
-//                        childAt.setScaleX(0.75f);
-//                        childAt.setScaleY(0.75f);
-
-                    }
-
-
-                }
-            }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -84,42 +69,38 @@ public class MainActivity extends AppCompatActivity {
                     View v = mRecyclerview.getChildAt(i);
                     v.getLocationOnScreen(location);
 
-                    int minX = location[0];
-                    int minY = mRecyclerview.getTop();
 
-                    int maxX = location[0] + v.getWidth();
-                    int maxY = mRecyclerview.getBottom();
+                    int recyclerViewCenterX = mRecyclerview.getLeft() + mRecyclerview.getWidth() / 2;
+                    int itemCenterX = location[0] + v.getWidth() / 2;
 
-                    int recyclerViewCenterX = mRecyclerview.getLeft()+(mRecyclerview.getRight() - mRecyclerview.getLeft()) / 2;
-                    int centerX= location[0] + v.getWidth()/2;
+//                   ★ 两边的图片缩放比例
+                    float scale = 0.9f;
+//                     ★某个item中心X坐标距recyclerview中心X坐标的偏移量
+                    int offX =  Math.abs(itemCenterX - recyclerViewCenterX);
+//                    ★ 在一个item的宽度范围内，item从1缩放至scale，那么改变了（1-scale），从下列公式算出随着offX变化，item的变化缩放百分比
+
+                    float percent =offX * (1 - scale) / v.getWidth();
+//                   ★  取反哟
+                    float interpretateScale = 1 - percent;
 
 
-//                    int abs = Math.abs(recyclerViewCenterX - centerX);
-                    int dis = centerX-recyclerViewCenterX  ;
-                    float percent = Math.abs(dis *0.17f/ 350.0f);
-                    double scale = 1-percent;
-//if (scale<0.9){
-//    scale=0.9;
-//}
-                    v.setScaleX((float) (scale));
-                    v.setScaleY((float) (scale));
+//                    这个if不走的话，得到的是多级渐变模式
+                    if (interpretateScale < scale) {
+                        interpretateScale = scale;
+                    }
+                    v.setScaleX((interpretateScale));
+                    v.setScaleY((interpretateScale));
 
-                    Log.e("qwe",recyclerViewCenterX+"///"+centerX+"///"+scale+"///"+percent+"///"+i);
-                    Log.e("qwe","-----");
+                    Log.e("qwe", recyclerViewCenterX + "///" + itemCenterX + "///" + interpretateScale + "///" + percent + "///" + i);
+                    Log.e("qwe", "-----");
 
                 }
-                Log.e("qwe","====================");
+                Log.e("qwe", "====================");
 
             }
 
         });
-        mLl1.setOnTouchListener(new View.OnTouchListener() {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return mRecyclerview.dispatchTouchEvent(event);
-            }
-        });
     }
 
     private void extendsViewPager() {
