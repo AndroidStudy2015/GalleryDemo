@@ -96,12 +96,15 @@ public class MainActivity extends AppCompatActivity {
 
 //                    int abs = Math.abs(recyclerViewCenterX - centerX);
                     int dis = centerX-recyclerViewCenterX  ;
-                    float percent = Math.abs(dis *0.1f/ 350.0f);
+                    float percent = Math.abs(dis *0.17f/ 350.0f);
                     double scale = 1-percent;
-
+//if (scale<0.9){
+//    scale=0.9;
+//}
+                    v.setScaleX((float) (scale));
                     v.setScaleY((float) (scale));
 
-                    Log.e("qwe",recyclerViewCenterX+"///"+centerX+"///"+scale+"///"+i);
+                    Log.e("qwe",recyclerViewCenterX+"///"+centerX+"///"+scale+"///"+percent+"///"+i);
                     Log.e("qwe","-----");
 
                 }

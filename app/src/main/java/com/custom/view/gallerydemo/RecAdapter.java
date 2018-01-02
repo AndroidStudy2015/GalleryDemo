@@ -43,7 +43,8 @@ class RecAdapter extends RecyclerView.Adapter<RecAdapter.VH> {
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
-        holder.iv.setImageResource(imageIdArray[position]);
+        holder.iv.setImageResource(imageIdArray[0]);
+//        holder.iv.setImageResource(imageIdArray[position]);
 //        holder.itemRoot.setScaleX(0.75f);
 //        holder.itemRoot.setScaleY(0.75f);
         if (position==0){
