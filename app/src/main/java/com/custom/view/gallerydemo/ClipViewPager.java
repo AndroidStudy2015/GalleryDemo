@@ -31,12 +31,14 @@ public class ClipViewPager extends ViewPager {
     }
 
     /**
+     * 找到屏幕上显示的所有子条目，得到他们在屏幕中的坐标，与手指触摸点比对，返回你所点到的View
      * @param ev
      * @return
      */
     private View viewoOfClickOnScreen(MotionEvent ev) {
         int childCount = getChildCount();
         Log.e("ccc",childCount+"");
+
         int[] location = new int[2];
         for (int i = 0; i < childCount; i++) {
             View v = getChildAt(i);

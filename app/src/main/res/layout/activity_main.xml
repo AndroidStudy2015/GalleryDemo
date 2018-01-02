@@ -5,6 +5,7 @@
     android:id="@+id/ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:layout_gravity="center"
     tools:context="com.custom.view.gallerydemo.MainActivity">
 
@@ -21,6 +22,27 @@
         <com.custom.view.gallerydemo.ClipViewPager
             android:id="@+id/viewpager"
             android:layout_width="100dp"
+            android:layout_height="170dp"
+            android:layout_gravity="center"
+
+            android:clipChildren="false"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:clipChildren="false">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
             android:layout_height="170dp"
             android:layout_gravity="center"
 
