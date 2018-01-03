@@ -15,11 +15,12 @@ import android.widget.RelativeLayout;
 class RecAdapter extends RecyclerView.Adapter<RecAdapter.VH> {
     private int mRecyclerViewWidth;
     private Context mContext;
+    private RecyclerView mRecyclerView;
 
-    public RecAdapter(Context context, int recyclerViewWidth) {
+    public RecAdapter(Context context, int recyclerViewWidth, RecyclerView recyclerview) {
         mContext = context;
         mRecyclerViewWidth = recyclerViewWidth;
-
+        mRecyclerView = recyclerview;
 
     }
 
@@ -38,6 +39,7 @@ class RecAdapter extends RecyclerView.Adapter<RecAdapter.VH> {
             R.drawable.iv3, R.drawable.iv4, R.drawable.iv1, R.drawable.iv2,
             R.drawable.iv3, R.drawable.iv4};
 
+
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater from = LayoutInflater.from(mContext);
@@ -46,9 +48,9 @@ class RecAdapter extends RecyclerView.Adapter<RecAdapter.VH> {
     }
 
     @Override
-    public void onBindViewHolder(VH holder, int position) {
+    public void onBindViewHolder(final VH holder, final int position) {
         holder.iv.setImageResource(imageIdArray[position]);
-        ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.itemRoot.getLayoutParams();
+        final ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.itemRoot.getLayoutParams();
         // 为了居中， 第一个条目leftMagrin、最后一个条目的rightMargin是（recyclerView宽度减去一个条目的宽度）/2
         int margin = (mRecyclerViewWidth - p.width) / 2;
         if (position == 0) {
@@ -65,6 +67,24 @@ class RecAdapter extends RecyclerView.Adapter<RecAdapter.VH> {
             holder.itemRoot.setLayoutParams(p);
 
         }
+
+
+        holder.itemRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int[] location = new int[2];
+                v.getLocationOnScreen(location);
+                int currentX = location[0];
+                int currentCenterX = (int) (currentX + p.width / 2 * 0.8f);//因为除了中间外的其他条目是被缩放为0.8的状态
+                int recyclerViewCenterX = mRecyclerViewWidth / 2;
+                int offX = currentCenterX - recyclerViewCenterX;
+
+                if (Math.abs(offX) >p.width / 2 * 0.21f) {//因为已经居中的Item，已经被放大到比例1了
+                    mRecyclerView.smoothScrollBy(offX, 0);
+                }
+            }
+        });
     }
 
     @Override

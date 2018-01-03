@@ -5,8 +5,8 @@
     android:id="@+id/ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_gravity="center"
+    android:orientation="vertical"
     tools:context="com.custom.view.gallerydemo.MainActivity">
 
 
@@ -14,10 +14,10 @@
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:clipChildren="false">
+        android:background="@color/colorAccent"
+        android:clipChildren="false"
+        android:gravity="center">
 
         <com.custom.view.gallerydemo.ClipViewPager
             android:id="@+id/viewpager"
@@ -29,26 +29,14 @@
     </LinearLayout>
 
 
-
-    <LinearLayout
-        android:layout_marginTop="30dp"
-        android:id="@+id/ll1"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
+        android:layout_height="170dp"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:clipChildren="false">
-
-        <android.support.v7.widget.RecyclerView
-            android:background="#f00987"
-            android:id="@+id/recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:layout_gravity="center"
-
-            android:clipChildren="false"/>
-    </LinearLayout>
+        android:layout_marginTop="30dp"
+        android:background="#f00987"
+        android:clipChildren="false"/>
 
 
 </android.support.v7.widget.LinearLayoutCompat>

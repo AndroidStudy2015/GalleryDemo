@@ -1,6 +1,7 @@
 package com.custom.view.gallerydemo;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -41,16 +42,15 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerview.setLayoutManager(manager);
 
 
-        int mRecyclerviewWidth = 0;
+        int mRecyclerviewWidth;
         ViewGroup.LayoutParams layoutParams = mRecyclerview.getLayoutParams();
         if (layoutParams.width == -1) {
-            mRecyclerviewWidth = DisplayUtils.getScreenWidth(this);
+            mRecyclerviewWidth = DisplayUtils.getScreenWidth(this);//我这里是全屏幕宽度，根据实际情况定
         } else {
             mRecyclerviewWidth = layoutParams.width;
         }
-        mRecAdapter = new RecAdapter(this, mRecyclerviewWidth);
+        mRecAdapter = new RecAdapter(this, mRecyclerviewWidth,mRecyclerview);
         mRecyclerview.setAdapter(mRecAdapter);
-        mLl1 = findViewById(R.id.ll1);
         final LinearSnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mRecyclerview);
         mRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     int itemCenterX = location[0] + v.getWidth() / 2;
 
 //                   ★ 两边的图片缩放比例
-                    float scale = 0.9f;
+                    float scale = 0.8f;
 //                     ★某个item中心X坐标距recyclerview中心X坐标的偏移量
                     int offX =  Math.abs(itemCenterX - recyclerViewCenterX);
 //                    ★ 在一个item的宽度范围内，item从1缩放至scale，那么改变了（1-scale），从下列公式算出随着offX变化，item的变化缩放百分比
@@ -91,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
                     v.setScaleX((interpretateScale));
                     v.setScaleY((interpretateScale));
 
-                    Log.e("qwe", recyclerViewCenterX + "///" + itemCenterX + "///" + interpretateScale + "///" + percent + "///" + i);
-                    Log.e("qwe", "-----");
+//                    Log.e("qwe", recyclerViewCenterX + "///" + itemCenterX + "///" + interpretateScale + "///" + percent + "///" + i);
+//                    Log.e("qwe", "-----");
 
                 }
-                Log.e("qwe", "====================");
+//                Log.e("qwe", "====================");
 
             }
 
@@ -112,7 +112,22 @@ public class MainActivity extends AppCompatActivity {
 //        mViewPager.setPadding(30,30,30,30);//设置间距
         mViewPager.setOffscreenPageLimit(8);//设置缓存数量
         mViewPager.setAdapter(adapter);
-        mViewPager.setPageTransformer(false, new ScaleVieapagerTransform());
+
+
+        mViewPager.setPageTransformer(true, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(View page, float position) {
+                float scale = 1f - ((float) (0.3 * Math.abs(position)));
+//                不写下面的if，得到的是多级缩放，写了之后，是单级缩放
+                if (scale<0.7f){
+                    scale=0.7f;
+                }
+
+                page.setScaleY(scale);
+                page.setScaleX(scale);
+            }
+        });
+//        mViewPager.setPageTransformer(false, new ScaleVieapagerTransform());
         mLl.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
